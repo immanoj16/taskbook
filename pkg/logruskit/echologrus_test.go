@@ -45,9 +45,9 @@ func TestEchoLogrus(t *testing.T) {
 }
 
 func TestEchoLogrus_SetLevel(t *testing.T) {
-	testCases := []struct{
+	testCases := []struct {
 		TestName string
-		lvl log.Lvl
+		lvl      log.Lvl
 		expected logrus.Level
 	}{
 		{lvl: log.INFO, expected: logrus.InfoLevel},
