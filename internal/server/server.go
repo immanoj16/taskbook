@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"strings"
@@ -22,7 +21,7 @@ import (
 type Server struct {
 	Config *config.Config
 	Echo   *echo.Echo
-	DB     *sql.DB `name:"pg"`
+	DB     *config.Database
 }
 
 // NewEcho returns  a new instance of server
@@ -44,10 +43,17 @@ func NewServer() (*Server, error) {
 		return nil, fmt.Errorf("%s: %w", prefix, err)
 	}
 
+	prefix = "DB"
+	db, err := config.NewDatabase(prefix)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", prefix, err)
+	}
+
 	e := NewEcho(&cfg)
 	return &Server{
 		Config: &cfg,
 		Echo:   e,
+		DB:     &db,
 	}, nil
 }
 
