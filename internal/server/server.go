@@ -1,4 +1,4 @@
-package app
+package server
 
 import (
 	"context"
@@ -8,30 +8,43 @@ import (
 	"strings"
 	"time"
 
-	"github.com/immanoj16/taskbook/internal/app/infra"
+	"github.com/immanoj16/taskbook/internal/config"
+	"github.com/immanoj16/taskbook/pkg/logruskit"
+
+	"github.com/immanoj16/taskbook/internal/infra"
 	"github.com/immanoj16/taskbook/pkg/echokit"
 	"github.com/immanoj16/taskbook/pkg/errkit"
-	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
-	Config *infra.AppCfg
+	Config *config.Config
 	Echo   *echo.Echo
 	DB     *sql.DB `name:"pg"`
 }
 
+// NewEcho returns  a new instance of server
+func NewEcho(cfg *config.Config) *echo.Echo {
+	e := echo.New()
+	logger := infra.SetLogger(cfg.Debug)
+
+	e.HideBanner = true
+	e.Debug = cfg.Debug
+	e.Logger = logruskit.EchoLogger(logger)
+	return e
+}
+
 // NewServer returns new server
 func NewServer() (*Server, error) {
-	var cfg infra.AppCfg
 	prefix := "APP"
-	if err := envconfig.Process(prefix, &cfg); err != nil {
+	cfg, err := config.FromEnv(prefix)
+	if err != nil {
 		return nil, fmt.Errorf("%s: %w", prefix, err)
 	}
 
-	e := infra.NewEcho(&cfg)
+	e := NewEcho(&cfg)
 	return &Server{
 		Config: &cfg,
 		Echo:   e,
