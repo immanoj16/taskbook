@@ -21,7 +21,7 @@ import (
 type Server struct {
 	Config *config.Config
 	Echo   *echo.Echo
-	DB     *config.Database
+	DB     *config.DB
 }
 
 // NewEcho returns  a new instance of server

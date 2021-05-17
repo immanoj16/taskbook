@@ -9,10 +9,17 @@ func main() {
 	s, err := server.NewServer()
 	if err != nil {
 		logrus.Fatal(err.Error())
+		return
+	}
+	err = s.DB.Start()
+	if err != nil {
+		logrus.Fatal(err.Error())
+		return
 	}
 	err = s.Start()
 	if err != nil {
 		logrus.Fatal(err.Error())
+		return
 	}
 	defer func() {
 		if err = s.Shutdown(); err != nil {
