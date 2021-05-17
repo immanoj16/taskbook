@@ -2,10 +2,15 @@ package main
 
 import (
 	"github.com/immanoj16/taskbook/internal/server"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		logrus.Fatal("Error loading .env file")
+	}
 	s, err := server.NewServer()
 	if err != nil {
 		logrus.Fatal(err.Error())

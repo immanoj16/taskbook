@@ -21,16 +21,16 @@ type dbConfig struct {
 
 // DB represents the application server database (json file)
 type DB struct {
-	DbPath       string `envconfig:"PATH"`
-	DbConfigPath string `envconfig:"CONFIG_PATH"`
+	DbPath       string `envconfig:"DB_PATH" required:"true"`
+	DbConfigPath string `envconfig:"DB_CONFIG_PATH" required:"true"`
 	cfg          dbConfig
 	db           []byte
 }
 
 // NewDatabase load configuration from env vars
-func NewDatabase(prefix string) (DB, error) {
+func NewDatabase() (DB, error) {
 	d := DB{}
-	return d, envconfig.Process(prefix, &d)
+	return d, envconfig.Process("", &d)
 }
 
 // Start starts and initializes the file database

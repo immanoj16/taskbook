@@ -43,10 +43,10 @@ func NewServer() (*Server, error) {
 		return nil, fmt.Errorf("%s: %w", prefix, err)
 	}
 
-	prefix = "DB"
-	db, err := config.NewDatabase(prefix)
+	db, err := config.NewDatabase()
+	fmt.Printf("%+v", db)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", prefix, err)
+		return nil, fmt.Errorf("%w", err)
 	}
 
 	e := NewEcho(&cfg)
